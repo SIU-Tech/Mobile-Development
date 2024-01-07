@@ -1,4 +1,4 @@
-package com.example.siuverse.ui.view.auth.register
+package com.example.siuverse.ui.view.auth.login
 
 import android.content.Intent
 import android.os.Build
@@ -10,26 +10,26 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import com.example.siuverse.databinding.ActivityRegisterBinding
+import com.example.siuverse.data.repository.Result
+import com.example.siuverse.databinding.ActivityLoginBinding
+import com.example.siuverse.ui.model.UserModel
 import com.example.siuverse.ui.model.ViewModelFactory
-import com.example.siuverse.ui.view.auth.login.LoginActivity
+import com.example.siuverse.ui.view.main.MainActivity
 
-class RegisterActivity : AppCompatActivity() {
+class LoginActivity : AppCompatActivity() {
 
-    private val registerViewModel by viewModels<RegisterViewModel> {
+    private val loginViewModel by viewModels<LoginViewModel> {
         ViewModelFactory.getInstance(this)
     }
 
-    private lateinit var binding: ActivityRegisterBinding
-
+    private lateinit var binding: ActivityLoginBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityRegisterBinding.inflate(layoutInflater)
+        binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        setupAction()
         setupView()
-
+        setupAction()
     }
 
     private fun setupView() {
@@ -46,40 +46,40 @@ class RegisterActivity : AppCompatActivity() {
     }
 
     private fun setupAction() {
-       binding.btnRegister.setOnClickListener {
-            registerViewModel.register(
-                binding.edtTxtUsername.text.toString(),
+        binding.btnLogin.setOnClickListener {
+            loginViewModel.login(
                 binding.edtTxtEmail.text.toString(),
                 binding.edtTxtPassword.text.toString()
-            ).observe(this) { result ->
-                when (result) {
-                    is com.example.siuverse.data.repository.Result.Loading -> {
+            ).observe(this){ result ->
+                when(result){
+                    is Result.Loading -> {
                         binding.progressBar.visibility = View.VISIBLE
                     }
-
-                    is com.example.siuverse.data.repository.Result.Success -> {
+                    is Result.Success-> {
                         binding.progressBar.visibility = View.GONE
-                        Toast.makeText(this, "Register Berhasil", Toast.LENGTH_SHORT).show()
                         val email = binding.edtTxtEmail.text.toString()
+                        val token = result.data.user.token
+                        val userModel = UserModel(email, token)
+                        loginViewModel.saveSession(userModel)
                         AlertDialog.Builder(this).apply {
                             setTitle("Yeah!")
-                            setMessage("Akun dengan email $email telah siap, silahkan login!")
+                            setMessage("Login Successfully")
                             setPositiveButton("Continue") { _, _ ->
-                                val intent = Intent(this@RegisterActivity, LoginActivity::class.java)
+                                val intent = Intent(context, MainActivity::class.java)
+                                intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
                                 startActivity(intent)
+                                finish()
                             }
                             create()
                             show()
                         }
                     }
-
-                    is com.example.siuverse.data.repository.Result.Error -> {
+                    is Result.Error-> {
                         binding.progressBar.visibility = View.GONE
-                        Toast.makeText(this, "Register Gagal", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this, "Login Failed", Toast.LENGTH_SHORT).show()
                     }
                 }
             }
-
         }
     }
 }

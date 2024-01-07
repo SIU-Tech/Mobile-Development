@@ -1,5 +1,6 @@
 package com.example.siuverse.data.retrofit
 
+import com.example.siuverse.data.response.ResponseLogin
 import com.example.siuverse.data.response.ResponseRegister
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
@@ -13,5 +14,12 @@ interface ApiService {
   @Field("email") email: String,
   @Field("password") password: String
  ): ResponseRegister
+
+ @FormUrlEncoded
+ @POST("api/auth/login")
+ suspend fun login(
+  @Field("email") email: String,
+  @Field("password") password: String
+ ): ResponseLogin
 
 }

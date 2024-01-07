@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.siuverse.data.di.Injection
 import com.example.siuverse.data.repository.Repository
+import com.example.siuverse.ui.view.auth.login.LoginViewModel
 import com.example.siuverse.ui.view.auth.register.RegisterViewModel
 
 class ViewModelFactory(private val repository: Repository) :
@@ -16,6 +17,9 @@ class ViewModelFactory(private val repository: Repository) :
 
             modelClass.isAssignableFrom(RegisterViewModel::class.java) -> {
                 RegisterViewModel(repository) as T
+            }
+            modelClass.isAssignableFrom(LoginViewModel::class.java) -> {
+                LoginViewModel(repository) as T
             }
 
             else -> throw IllegalArgumentException("Unknown ViewModel class: " + modelClass.name)
