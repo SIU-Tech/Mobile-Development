@@ -1,5 +1,6 @@
 package com.example.siuverse.ui.view.auth.register
 
+import android.content.Intent
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -12,6 +13,7 @@ import androidx.appcompat.app.AlertDialog
 import com.example.siuverse.R
 import com.example.siuverse.databinding.ActivityRegisterBinding
 import com.example.siuverse.ui.model.ViewModelFactory
+import com.example.siuverse.ui.view.main.MainActivity
 
 class RegisterActivity : AppCompatActivity() {
 

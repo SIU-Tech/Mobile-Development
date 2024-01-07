@@ -5,7 +5,8 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.liveData
 import com.example.siuverse.data.pref.UserPreference
-import com.example.siuverse.data.response.RegisterResponse
+
+import com.example.siuverse.data.response.ResponseRegister
 import com.example.siuverse.data.retrofit.ApiService
 
 class Repository (
@@ -18,7 +19,7 @@ class Repository (
         name: String,
         email: String,
         password: String
-    ): LiveData<Result<RegisterResponse>> {
+    ): LiveData<Result<ResponseRegister>> {
         return liveData {
             try {
                 val response = apiService.register(name, email, password)
